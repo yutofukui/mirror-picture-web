@@ -25,9 +25,9 @@ let lastFaceDetectedTime = 0;
 let lastVideoTime = -1;
 let hasPhoto = false;
 
-const THRESHOLD_RESET = 0.36;
-const THRESHOLD_CAPTURE = 0.35;
-const THRESHOLD_FAR = 0.30;
+const THRESHOLD_RESET = 0.40;
+const THRESHOLD_CAPTURE = 0.38;
+const THRESHOLD_FAR = 0.33;
 const ALPHA_SMOOTHING = 0.15;
 const RATIO_SMOOTHING = 0.15;
 let captureFlash = 0.0;
