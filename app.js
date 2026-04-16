@@ -25,7 +25,6 @@ let lastFaceDetectedTime = 0;
 let lastVideoTime = -1;
 let hasPhoto = false;
 
-const THRESHOLD_RESET = 0.38;
 const THRESHOLD_CAPTURE = 0.35;
 const THRESHOLD_FAR = 0.30;
 const ALPHA_SMOOTHING = 0.1;
@@ -123,7 +122,7 @@ function predictWebcam() {
     if (timeSinceFace > 1000) {
         state = "NEAR";
         hasPhoto = false;
-        smoothedRatio = THRESHOLD_RESET;
+        smoothedRatio = THRESHOLD_CAPTURE + 0.1;
     } else {
         if (state === "NEAR") {
             if (smoothedRatio < THRESHOLD_CAPTURE) {
@@ -131,7 +130,7 @@ function predictWebcam() {
                 state = "TRANSITION";
             }
         } else if (state === "TRANSITION" || state === "FAR") {
-            if (smoothedRatio > THRESHOLD_RESET) {
+            if (smoothedRatio >= THRESHOLD_CAPTURE) {
                 state = "NEAR";
                 hasPhoto = false;
             } else {
