@@ -25,7 +25,7 @@ let lastFaceDetectedTime = 0;
 let lastVideoTime = -1;
 let hasPhoto = false;
 
-const THRESHOLD_RESET = 0.45;
+const THRESHOLD_RESET = 0.38;
 const THRESHOLD_CAPTURE = 0.35;
 const THRESHOLD_FAR = 0.30;
 const ALPHA_SMOOTHING = 0.1;
@@ -154,7 +154,7 @@ function predictWebcam() {
     ctx.globalAlpha = Math.max(0, 1.0 - currentAlpha);
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     
-    if (hasPhoto && currentAlpha > 0.001) {
+    if (currentAlpha > 0.001) {
         ctx.globalAlpha = currentAlpha;
         ctx.drawImage(photoCanvas, 0, 0, canvas.width, canvas.height);
     }
