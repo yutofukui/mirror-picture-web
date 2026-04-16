@@ -25,14 +25,14 @@ let lastFaceDetectedTime = 0;
 let lastVideoTime = -1;
 let hasPhoto = false;
 
-const THRESHOLD_RESET = 0.30;
-const THRESHOLD_CAPTURE = 0.22;
-const THRESHOLD_FAR = 0.12;
-const ALPHA_SMOOTHING = 0.05;
+const THRESHOLD_RESET = 0.45;
+const THRESHOLD_CAPTURE = 0.35;
+const THRESHOLD_FAR = 0.30;
+const ALPHA_SMOOTHING = 0.1;
 const RATIO_SMOOTHING = 0.15;
 
 const photoCanvas = document.createElement('canvas');
-const photoCtx = photoCanvas.getContext('2d', { alpha: false });
+const photoCtx = photoCanvas.getContext('2d');
 
 async function initModels() {
     const vision = await FilesetResolver.forVisionTasks(
@@ -86,6 +86,13 @@ function capturePhoto() {
 }
 
 function predictWebcam() {
+    if (video.videoWidth > 0 && canvas.width !== video.videoWidth) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        photoCanvas.width = video.videoWidth;
+        photoCanvas.height = video.videoHeight;
+    }
+
     if (video.currentTime !== lastVideoTime) {
         lastVideoTime = video.currentTime;
         let startTimeMs = performance.now();
