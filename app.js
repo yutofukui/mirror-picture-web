@@ -25,10 +25,12 @@ let lastFaceDetectedTime = 0;
 let lastVideoTime = -1;
 let hasPhoto = false;
 
-const THRESHOLD_CAPTURE = 0.35;
-const THRESHOLD_FAR = 0.30;
-const ALPHA_SMOOTHING = 0.1;
+const THRESHOLD_RESET = 0.25;
+const THRESHOLD_CAPTURE = 0.21;
+const THRESHOLD_FAR = 0.15;
+const ALPHA_SMOOTHING = 0.15;
 const RATIO_SMOOTHING = 0.15;
+let captureFlash = 0.0;
 
 const photoCanvas = document.createElement('canvas');
 const photoCtx = photoCanvas.getContext('2d');
@@ -81,6 +83,8 @@ startBtn.addEventListener('click', async () => {
 
 function capturePhoto() {
     photoCtx.drawImage(video, 0, 0, photoCanvas.width, photoCanvas.height);
+    // Trigger visual hint that snapshot occurred
+    captureFlash = 1.0;
     hasPhoto = true;
 }
 
@@ -122,7 +126,7 @@ function predictWebcam() {
     if (timeSinceFace > 1000) {
         state = "NEAR";
         hasPhoto = false;
-        smoothedRatio = THRESHOLD_CAPTURE + 0.1;
+        smoothedRatio = THRESHOLD_RESET;
     } else {
         if (state === "NEAR") {
             if (smoothedRatio < THRESHOLD_CAPTURE) {
@@ -130,11 +134,10 @@ function predictWebcam() {
                 state = "TRANSITION";
             }
         } else if (state === "TRANSITION" || state === "FAR") {
-            if (smoothedRatio >= THRESHOLD_CAPTURE) {
+            if (smoothedRatio > THRESHOLD_RESET) {
                 state = "NEAR";
-                hasPhoto = false;
             } else {
-                targetAlpha = (THRESHOLD_CAPTURE - smoothedRatio) / (THRESHOLD_CAPTURE - THRESHOLD_FAR);
+                targetAlpha = (THRESHOLD_CAPTURE - Math.min(smoothedRatio, THRESHOLD_CAPTURE)) / (THRESHOLD_CAPTURE - THRESHOLD_FAR);
                 targetAlpha = Math.max(0, Math.min(1, targetAlpha));
                 
                 if (targetAlpha === 1.0) state = "FAR";
@@ -159,6 +162,12 @@ function predictWebcam() {
     }
     
     ctx.globalAlpha = 1.0;
+    
+    if (captureFlash > 0) {
+        ctx.fillStyle = `rgba(255, 255, 255, ${captureFlash * 0.15})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        captureFlash -= 0.1;
+    }
     
     if (isDebug) {
         dState.innerText = state;
