@@ -148,13 +148,18 @@ function predictWebcam() {
     
     currentAlpha = currentAlpha * (1 - ALPHA_SMOOTHING) + targetAlpha * ALPHA_SMOOTHING;
     
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.globalAlpha = Math.max(0, 1.0 - currentAlpha);
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     
     if (hasPhoto && currentAlpha > 0.001) {
         ctx.globalAlpha = currentAlpha;
         ctx.drawImage(photoCanvas, 0, 0, canvas.width, canvas.height);
-        ctx.globalAlpha = 1.0;
     }
+    
+    ctx.globalAlpha = 1.0;
     
     if (isDebug) {
         dState.innerText = state;
