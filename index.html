@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, playsinline">
+    <title>Mirror / Picture</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <div id="ui-layer">
+        <button id="start-button">開始</button>
+    </div>
+    
+    <div id="debug-layer" style="display: none;">
+        <div>State: <span id="debug-state"></span></div>
+        <div>Ratio: <span id="debug-ratio"></span></div>
+        <div>Alpha: <span id="debug-alpha"></span></div>
+    </div>
+
+    <canvas id="main-canvas"></canvas>
+    <video id="camera-video" autoplay playsinline muted></video>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
